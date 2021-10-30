@@ -6,7 +6,6 @@ plugins {
 
 group = 'br.com.github.kalilventura'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
 
 repositories {
 	mavenCentral()
