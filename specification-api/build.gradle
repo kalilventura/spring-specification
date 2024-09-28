@@ -1,23 +1,59 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.6'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.2'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
-group = 'br.com.github.kalilventura'
-version = '0.0.1-SNAPSHOT'
+tasks.named('bootJar') {
+    finalizedBy {
+        println "JAR file path: $archivePath"
+    }
+}
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+
+ext {
+    springBootVersion = '3.3.2'
+    springfoxVersion = '3.0.0'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+    }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	runtimeOnly 'mysql:mysql-connector-java'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation "io.springfox:springfox-swagger2:${springfoxVersion}"
+    implementation "io.springfox:springfox-swagger-ui:${springfoxVersion}"
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
+}
+
+group = 'br.com.github.kalilventura'
+version = '0.0.1'
+compileJava.options.encoding = 'UTF-8'
+
+springBoot {
+    buildInfo {
+        properties {
+            group = project.group
+            artifact = 'backend'
+            version = project.version
+        }
+    }
+}
+
+bootJar {
+    archiveFileName = "api.${archiveExtension.get()}"
 }

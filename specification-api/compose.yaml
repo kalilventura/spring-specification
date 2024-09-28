@@ -1,0 +1,50 @@
+services:
+  server:
+    container_name: employee_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=companydb
+      - DB_PORT=5432
+      - DB_NAME=company
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - specification-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      companydb:
+        condition: service_healthy
+  companydb:
+    container_name: postgres
+    image: postgres:16.4
+    restart: always
+    volumes:
+      - company-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=company
+    ports:
+      - "5433:5432"
+    networks:
+      - specification-network
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  company-db-data:
+
+networks:
+  specification-network:

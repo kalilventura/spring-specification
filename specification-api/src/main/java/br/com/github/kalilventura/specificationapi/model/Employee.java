@@ -1,6 +1,6 @@
 package br.com.github.kalilventura.specificationapi.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class Employee {
